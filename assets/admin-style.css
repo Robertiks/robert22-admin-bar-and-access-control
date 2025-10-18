@@ -1,0 +1,270 @@
+/* RBTS Admin Bar and Roles Control Plugin Styles - Unique CSS Classes */
+.rbts-admin-bar-and-roles-control-wrap {
+    max-width: 800px;
+    margin: 20px 0;
+}
+
+.rbts-admin-bar-and-roles-control-section {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.rbts-admin-bar-and-roles-control-section h2 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 1.3em;
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 10px;
+}
+
+.rbts-role-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.rbts-role-selection-grid label {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rbts-role-selection-grid label:hover {
+    background: #f0f0f1;
+    border-color: #0073aa;
+}
+
+.rbts-role-selection-grid input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.rbts-redirect-options {
+    margin: 15px 0;
+}
+
+.rbts-redirect-options label {
+    display: block;
+    margin: 10px 0;
+    font-weight: 500;
+}
+
+.rbts-custom-path-input,
+.rbts-full-url-input {
+    margin: 10px 0 10px 25px;
+    display: none;
+}
+
+.rbts-custom-path-input input,
+.rbts-full-url-input input {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Advanced Role Assignment Styles */
+.rbts-role-assignment-section {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.rbts-role-assignment-section h3 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 1.2em;
+}
+
+#rbts-selected-roles-container {
+    margin: 10px 0;
+    min-height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 10px;
+    background: white;
+    position: relative;
+}
+
+#rbts-selected-roles-container:focus-within {
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+}
+
+#rbts-selected-roles-tags {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+#rbts-role-selector {
+    position: relative;
+}
+
+#rbts-add-role-btn {
+    margin-top: 5px;
+    font-size: 12px;
+    padding: 4px 8px;
+    height: auto;
+    line-height: 1.4;
+}
+
+.rbts-role-tag {
+    display: inline-block;
+    background: #0073aa;
+    color: white;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 3px;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.rbts-role-tag-remove {
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.rbts-role-tag-remove:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    padding: 0 2px;
+}
+
+#rbts-available-roles {
+    position: absolute;
+    left: 0;
+    right: 0;
+    border: 1px solid #ddd;
+    max-height: 150px;
+    overflow-y: auto;
+    background: white;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    border-radius: 0 0 3px 3px;
+}
+
+.rbts-role-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s ease;
+}
+
+.rbts-role-option:hover {
+    background: #f0f0f1;
+}
+
+.rbts-role-option:last-child {
+    border-bottom: none;
+}
+
+/* Notice Styles */
+#rbts-role-assignment-notice {
+    margin-top: 10px;
+    padding: 10px;
+    border-left: 4px solid #ffba00;
+    background: #fff8e1;
+    border-radius: 0 4px 4px 0;
+}
+
+#rbts-role-assignment-notice p {
+    margin: 0;
+    color: #8a6914;
+}
+
+/* Additional Redirect Sections */
+.rbts-additional-redirect-section {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.rbts-additional-redirect-section h4 {
+    margin-top: 0;
+    color: #23282d;
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 8px;
+}
+
+/* Button Styles */
+.rbts-add-redirect-btn {
+    margin-top: 15px;
+    background: #00a32a;
+    border-color: #00a32a;
+    color: white;
+}
+
+.rbts-add-redirect-btn:hover {
+    background: #008a20;
+    border-color: #008a20;
+}
+
+.rbts-remove-redirect-btn {
+    background: #d63638;
+    border-color: #d63638;
+    color: white;
+    float: right;
+    margin-top: -5px;
+}
+
+.rbts-remove-redirect-btn:hover {
+    background: #b32d2e;
+    border-color: #b32d2e;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .rbts-role-selection-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .rbts-admin-bar-and-roles-control-wrap {
+        margin: 10px 0;
+    }
+    
+    .rbts-admin-bar-and-roles-control-section {
+        padding: 15px;
+    }
+}
+
+.description {
+    font-style: italic;
+    color: #666;
+    margin-top: 5px;
+}
+
+.rbts-admin-bar-and-roles-control-status {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.rbts-admin-bar-and-roles-control-status.enabled {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.rbts-admin-bar-and-roles-control-status.disabled {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
