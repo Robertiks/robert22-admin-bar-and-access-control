@@ -1,94 +1,77 @@
-=== Admin Bar and Roles Control ===
-Contributors: Robertiks
-Tags: admin bar, user roles, access control, redirect, role-based redirects
+=== Robert22 Admin Bar and Access Control ===
+Contributors: robertas
+Donate link: https://github.com/Robertiks/robert22-admin-bar-and-access-control
+Tags: admin bar, roles, redirect, access control, user management
 Requires at least: 5.0
-Tested up to: 6.8
+Tested up to: 6.4
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Advanced admin bar visibility and wp-admin access control with role-specific redirect configurations and granular permission management.
+Control WordPress admin bar visibility and redirect users based on their roles with advanced role-based redirect configurations.
 
 == Description ==
 
-Admin Bar and Roles Control provides comprehensive control over WordPress admin access with advanced role-based redirect functionality:
+Robert22 Admin Bar and Access Control is a powerful WordPress plugin that gives you complete control over the admin bar visibility and user redirects based on user roles. Perfect for membership sites, client portals, and multi-user WordPress installations.
 
-**Core Features:**
-* Enable or disable admin bar control functionality
-* Select specific user roles that should be restricted from wp-admin access
-* Hide the admin bar for selected roles while maintaining WordPress functionality
-* Advanced role-based redirect system with multiple configurations
+**Key Features:**
 
-**Advanced Redirect System:**
-* Configure different redirect destinations for different user roles
-* Multiple redirect options per configuration:
-  * Redirect to home page
-  * Redirect to a custom path on your site
-  * Redirect to a completely custom URL
-* Create unlimited role assignment configurations
-* Tag-based role selection interface for easy management
-* Prevent duplicate role assignments across configurations
+* **Admin Bar Control**: Show, hide, or selectively control admin bar visibility based on user roles
+* **Role-Based Redirects**: Redirect users to custom pages after login based on their roles
+* **Flexible Redirect Options**: Support for relative paths and full URLs
+* **User-Friendly Interface**: Easy-to-use admin interface with clear options
+* **Security Focused**: Built with WordPress security best practices
+* **Lightweight**: Minimal impact on site performance
 
-**Enhanced User Experience:**
-* Intuitive role assignment interface with visual feedback
-* Custom confirmation dialogs (no browser alerts)
-* Real-time validation and error handling
-* Automatic exclusion of already-assigned roles from selection
-* Clean, WordPress-native admin interface
-
-Perfect for membership sites, client websites, multi-role organizations, or any WordPress installation requiring sophisticated backend access control with role-specific redirect behavior.
+**Perfect for:**
+* Membership sites
+* Client portals
+* Multi-author blogs
+* E-learning platforms
+* Corporate websites
+* Any site with multiple user roles
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/admin-bar-and-roles-control` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/robert22-admin-bar-and-access-control` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Use the Tools->Admin Bar and Roles Control screen to configure the plugin
+3. Use the Tools -> Robert22 Admin Bar & Access Control screen to configure the plugin
 
 == Frequently Asked Questions ==
 
-= Does this plugin affect user functionality? =
+= Does this plugin work with custom user roles? =
 
-No, this plugin only controls admin bar visibility and wp-admin access. All WordPress functionality remains intact for restricted users on the frontend.
+Yes! The plugin works with all WordPress user roles, including custom roles created by other plugins.
 
-= Can I set different redirect URLs for different roles? =
+= Can I redirect different roles to different pages? =
 
-Yes! The enhanced version includes an advanced role assignment system that allows you to create multiple redirect configurations, each targeting specific user roles with different redirect destinations.
+Yes, you can configure different redirect destinations for different user roles.
 
-= How does the role assignment system work? =
+= Will this affect administrators? =
 
-Select roles in the Role Restrictions section, then use "Assign Selected Roles" to create specific redirect configurations. You can assign different roles to different redirect settings, and the system prevents duplicate assignments.
+By default, administrators are excluded from admin bar hiding to ensure they can always access admin functions.
 
-= Will this block AJAX requests? =
+= Is this plugin compatible with membership plugins? =
 
-No, AJAX requests are specifically excluded from the wp-admin blocking to ensure frontend functionality continues to work properly.
-
-= Can I remove role assignments? =
-
-Yes, each role assignment configuration includes a remove button with confirmation dialog for easy management.
+Yes, the plugin is designed to work alongside membership and user role management plugins.
 
 == Screenshots ==
 
-1. Admin Bar and Roles Control settings page in Tools menu
-2. Enhanced role selection interface with tag-based management
-3. Advanced redirect options configuration
-4. Role assignment management with multiple configurations
+1. Main plugin settings page
+2. Role selection interface
+3. Redirect configuration options
 
 == Changelog ==
 
 = 1.0.0 =
-* Initial release with enhanced functionality
-* Advanced role-based redirect system
-* Multiple redirect configurations support
-* Tag-based role selection interface
-* Custom confirmation dialogs
-* Real-time validation and error handling
-* Automatic duplicate prevention
-* WordPress Settings API integration
-* Enhanced security with proper nonce verification
-* Improved user experience with visual feedback
+* Initial release
+* Admin bar visibility control
+* Role-based redirect functionality
+* Security enhancements
+* WordPress 6.4 compatibility
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial release of Admin Bar and Roles Control plugin with advanced role-based redirect functionality.
+Initial release of Robert22 Admin Bar and Access Control plugin.
