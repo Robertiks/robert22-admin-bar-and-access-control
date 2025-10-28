@@ -1,4 +1,4 @@
-=== Admin Bar and Roles Control ===
+=== Robert22 Admin Bar and Access Control ===
 Contributors: Robertiks
 Tags: admin bar, user roles, access control, redirect, role-based redirects
 Requires at least: 5.0
@@ -12,7 +12,7 @@ Advanced admin bar visibility and wp-admin access control with role-specific red
 
 == Description ==
 
-Admin Bar and Roles Control provides comprehensive control over WordPress admin access with advanced role-based redirect functionality:
+Robert22 Admin Bar and Access Control provides comprehensive control over WordPress admin access with advanced role-based redirect functionality:
 
 **Core Features:**
 * Enable or disable admin bar control functionality
@@ -41,9 +41,9 @@ Perfect for membership sites, client websites, multi-role organizations, or any 
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/admin-bar-and-roles-control` directory, or install the plugin through the WordPress plugins screen directly.
+1. Upload the plugin files to the `/wp-content/plugins/robert22-admin-bar-and-access-control` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
-3. Use the Tools->Admin Bar and Roles Control screen to configure the plugin
+3. Use the Tools->Robert22 Admin Bar and Access Control screen to configure the plugin
 
 == Frequently Asked Questions ==
 
@@ -69,7 +69,7 @@ Yes, each role assignment configuration includes a remove button with confirmati
 
 == Screenshots ==
 
-1. Admin Bar and Roles Control settings page in Tools menu
+1. Robert22 Admin Bar and Access Control settings page in Tools menu
 2. Enhanced role selection interface with tag-based management
 3. Advanced redirect options configuration
 4. Role assignment management with multiple configurations
@@ -91,4 +91,4 @@ Yes, each role assignment configuration includes a remove button with confirmati
 == Upgrade Notice ==
 
 = 1.0.0 =
-Initial release of Admin Bar and Roles Control plugin with advanced role-based redirect functionality.
+Initial release of Robert22 Admin Bar and Access Control plugin with advanced role-based redirect functionality.

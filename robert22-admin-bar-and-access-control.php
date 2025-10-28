@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: Admin Bar and Roles Control
- * Plugin URI: https://wordpress.org/plugins/admin-bar-and-roles-control
+ * Plugin Name: Robert22 Admin Bar and Access Control
+ * Plugin URI: https://wordpress.org/plugins/robert22-admin-bar-and-access-control
  * Description: Control admin bar visibility and wp-admin access for specific user roles with customizable redirect options.
  * Version: 1.0.0
  * Author: Robertiks
- * Author URI: https://github.com/Robertiks/admin-bar-and-roles-control/
+ * Author URI: https://github.com/Robertiks/robert22-admin-bar-and-access-control/
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: admin-bar-and-roles-control
+ * Text Domain: robert22-admin-bar-and-access-control
  */
 
 // Prevent direct access
@@ -17,15 +17,15 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants with unique prefix
-define('RBTS_ABC_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('RBTS_ABC_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('RBTS_ABC_VERSION', '1.0.0');
-define('RBTS_ABC_OPTION_NAME', 'rbts_admin_bar_control_options');
+define('R22_ABC_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('R22_ABC_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define('R22_ABC_VERSION', '1.0.0');
+define('R22_ABC_OPTION_NAME', 'r22_admin_bar_control_options');
 
-class RBTS_AdminBarControl {
+class R22_AdminBarControl {
     
     private $options;
-    private $option_name = 'rbts_admin_bar_control_options';
+    private $option_name = 'r22_admin_bar_control_options';
     
     public function __construct() {
         add_action('init', array($this, 'init'));
@@ -53,10 +53,10 @@ class RBTS_AdminBarControl {
      */
     public function add_admin_menu() {
         add_management_page(
-            'Admin Bar and Roles Control',
-            'Admin Bar and Roles Control',
+            'Robert22 Admin Bar and Access Control',
+            'Admin Bar Control',
             'manage_options',
-            'rbts-admin-bar-and-roles-control',
+            'r22-admin-bar-and-access-control',
             array($this, 'admin_page')
         );
     }
@@ -65,7 +65,7 @@ class RBTS_AdminBarControl {
      * Initialize admin settings
      */
     public function admin_init() {
-        register_setting('rbts_admin_bar_control_group', $this->option_name, array(
+        register_setting('r22_admin_bar_control_group', $this->option_name, array(
             'sanitize_callback' => array($this, 'sanitize_options')
         ));
         
@@ -86,7 +86,7 @@ class RBTS_AdminBarControl {
         $role_assignments = isset($current_options['role_assignments']) ? $current_options['role_assignments'] : array();
         
         // Handle removal of assignments
-        if (isset($_POST['remove_assignment']) && isset($_POST['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'rbts_admin_bar_control_group-options')) {
+        if (isset($_POST['remove_assignment']) && isset($_POST['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'r22_admin_bar_control_group-options')) {
             $remove_index = intval($_POST['remove_assignment']);
             if (isset($role_assignments[$remove_index])) {
                 unset($role_assignments[$remove_index]);
@@ -171,13 +171,22 @@ class RBTS_AdminBarControl {
     }
     
     /**
-     * Enqueue admin styles
+     * Enqueue admin styles and scripts
      */
     public function enqueue_admin_styles($hook) {
-        if ($hook !== 'tools_page_rbts-admin-bar-and-roles-control') {
+        if ($hook !== 'tools_page_r22-admin-bar-and-access-control') {
             return;
         }
-        wp_enqueue_style('rbts-admin-bar-and-roles-control-admin', RBTS_ABC_PLUGIN_URL . 'assets/admin-style.css', array(), RBTS_ABC_VERSION);
+        wp_enqueue_style('r22-admin-bar-and-access-control-admin', R22_ABC_PLUGIN_URL . 'assets/admin-style.css', array(), R22_ABC_VERSION);
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('r22-admin-bar-and-access-control-admin', R22_ABC_PLUGIN_URL . 'assets/admin-main-js.js', array('jquery'), R22_ABC_VERSION, true);
+        
+        // Localize script with PHP variables
+        wp_localize_script('r22-admin-bar-and-access-control-admin', 'r22AdminVars', array(
+            'optionName' => $this->option_name,
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('r22_admin_nonce')
+        ));
     }
     
     /**
@@ -207,8 +216,8 @@ class RBTS_AdminBarControl {
             </div>
             
             <form method="post" action="options.php">
-                <?php settings_fields('rbts_admin_bar_control_group'); ?>
-                <?php do_settings_sections('rbts_admin_bar_control_group'); ?>
+                <?php settings_fields('r22_admin_bar_control_group'); ?>
+                <?php do_settings_sections('r22_admin_bar_control_group'); ?>
                 
                 <div class="rbts-admin-bar-and-roles-control-section">
                     <h2>General Settings</h2>
@@ -260,7 +269,7 @@ class RBTS_AdminBarControl {
                             <input type="radio" name="<?php echo esc_attr($this->option_name); ?>[redirect_type]" value="custom_path" <?php checked('custom_path', $redirect_type); ?> />
                             <strong>Redirect to Custom Path</strong>
                         </label>
-                        <div class="rbts-custom-path-input">
+                        <div class="rbts-custom-path-input" style="<?php echo ($redirect_type === 'custom_path') ? 'display: block;' : 'display: none;'; ?>">
                             <strong><?php echo esc_html(get_site_url()); ?>/</strong>
                             <input type="text" name="<?php echo esc_attr($this->option_name); ?>[custom_path]" value="<?php echo esc_attr($custom_path); ?>" placeholder="my-profile" style="width: 300px;" />
                         </div>
@@ -270,7 +279,7 @@ class RBTS_AdminBarControl {
                             <input type="radio" name="<?php echo esc_attr($this->option_name); ?>[redirect_type]" value="full_url" <?php checked('full_url', $redirect_type); ?> />
                             <strong>Redirect to Full URL</strong>
                         </label>
-                        <div class="rbts-full-url-input">
+                        <div class="rbts-full-url-input" style="<?php echo ($redirect_type === 'full_url') ? 'display: block;' : 'display: none;'; ?>">
                             <input type="url" name="<?php echo esc_attr($this->option_name); ?>[full_url]" value="<?php echo esc_attr($full_url); ?>" placeholder="https://example.com/custom-page" style="width: 400px;" />
                         </div>
                         <p class="description">Enter the complete URL where users should be redirected (e.g., https://example.com/custom-page)</p>
@@ -340,424 +349,7 @@ class RBTS_AdminBarControl {
             </form>
         </div>
         
-        <script>
-        jQuery(document).ready(function($) {
-            // Show/hide redirect options based on selection
-            $('input[name="<?php echo esc_js($this->option_name); ?>[redirect_type]"]').change(function() {
-                $('.rbts-custom-path-input, .rbts-full-url-input').hide();
-                if ($(this).val() === 'custom_path') {
-                    $('.rbts-custom-path-input').show();
-                } else if ($(this).val() === 'full_url') {
-                    $('.rbts-full-url-input').show();
-                }
-            }).trigger('change');
-            
-            // Advanced Role Assignment Functionality
-            var selectedRoles = [];
-            var availableRoles = [];
-            
-            // Get all available roles (excluding administrator)
-            $('input[name="<?php echo esc_js($this->option_name); ?>[restricted_roles][]"]').each(function() {
-                var roleValue = $(this).val();
-                var roleLabel = $(this).parent().text().trim();
-                availableRoles.push({
-                    value: roleValue,
-                    label: roleLabel
-                });
-            });
-            
-            // Handle Assign Selected Roles button click
-            $('#rbts-assign-roles-btn').click(function() {
-                var $button = $(this);
-                var checkedRoles = $('input[name="<?php echo esc_js($this->option_name); ?>[restricted_roles][]"]:checked');
-                
-                if ($button.text().trim() === 'Go Back') {
-                    // Close and reset the role assignment form
-                    $('#rbts-role-assignment-form').hide();
-                    $('#rbts-role-assignment-notice').hide();
-                    $button.text('Assign Selected Roles');
-                    
-                    // Clear selected roles
-                    selectedRoles = [];
-                    updateRoleTags();
-                    
-                    return;
-                }
-                
-                if (checkedRoles.length < 2) {
-                    $('#rbts-role-assignment-notice').show();
-                    $('#rbts-role-assignment-form').hide();
-                } else {
-                    $('#rbts-role-assignment-notice').hide();
-                    $('#rbts-role-assignment-form').show();
-                    $button.text('Go Back');
-                    
-                    // Reset selected roles and update button state
-                    selectedRoles = [];
-                    updateRoleTags();
-                    updateAddRoleButton();
-                }
-            });
-            
-            // Handle Add Role button click
-            $('#rbts-add-role-btn').click(function(e) {
-                e.preventDefault();
-                
-                // Check if button is disabled
-                if ($(this).prop('disabled')) {
-                    return;
-                }
-                
-                var availableForSelection = getAvailableRoles();
-                
-                if (availableForSelection.length > 0) {
-                    showRoleDropdown(availableForSelection);
-                } else {
-                    // Show message that all roles are selected
-                    $(this).text('All roles assigned').prop('disabled', true);
-                }
-            });
-            
-            // Hide dropdown when clicking outside
-            $(document).click(function(e) {
-                if (!$(e.target).closest('#rbts-role-selector, #rbts-available-roles').length) {
-                    $('#rbts-available-roles').hide();
-                }
-            });
-            
-            // Handle role selection
-            $(document).on('click', '.rbts-role-option', function() {
-                var roleValue = $(this).data('value');
-                var roleLabel = $(this).text();
-                
-                if (selectedRoles.indexOf(roleValue) === -1) {
-                    selectedRoles.push(roleValue);
-                    updateRoleTags();
-                    
-                    // Update the Add Role button to reflect available roles
-                    updateAddRoleButton();
-                    
-                    // Refresh the dropdown to remove the selected role from options
-                    var availableForSelection = getAvailableRoles();
-                    if (availableForSelection.length > 0) {
-                        showRoleDropdown(availableForSelection);
-                    } else {
-                        $('#rbts-available-roles').hide();
-                    }
-                }
-            });
-            
-            // Handle role removal
-            $(document).on('click', '.rbts-role-tag-remove', function() {
-                var roleValue = $(this).data('value');
-                selectedRoles = selectedRoles.filter(function(role) {
-                    return role !== roleValue;
-                });
-                updateRoleTags();
-                
-                // Update the Add Role button to reflect available roles
-                updateAddRoleButton();
-                
-                // If dropdown is visible, refresh it to show the newly available role
-                if ($('#rbts-available-roles').is(':visible')) {
-                    var availableForSelection = getAvailableRoles();
-                    showRoleDropdown(availableForSelection);
-                }
-            });
-            
-            // Update Add Role button state
-            function updateAddRoleButton() {
-                var availableForSelection = getAvailableRoles();
-                var $button = $('#rbts-add-role-btn');
-                
-                if (availableForSelection.length === 0) {
-                    $button.text('All roles assigned').prop('disabled', true);
-                } else {
-                    $button.text('+ Add Role').prop('disabled', false);
-                }
-            }
-            
-            // Get available roles for selection
-            function getAvailableRoles() {
-                var checkedRoles = [];
-                $('input[name="<?php echo esc_js($this->option_name); ?>[restricted_roles][]"]:checked').each(function() {
-                    checkedRoles.push($(this).val());
-                });
-                
-                // Get all roles that are already assigned in saved assignments
-                var assignedRoleValues = [];
-                $('.rbts-saved-assignment').each(function() {
-                    var rolesText = $(this).find('p:first').text();
-                    // Extract role values from "Roles: role1, role2, role3" format
-                    if (rolesText.indexOf('Roles:') !== -1) {
-                        var rolesPart = rolesText.split('Roles:')[1].trim();
-                        var roleValues = rolesPart.split(',').map(function(role) {
-                            return role.trim();
-                        });
-                        assignedRoleValues = assignedRoleValues.concat(roleValues);
-                    }
-                });
-                
-                var filtered = availableRoles.filter(function(role) {
-                    var isNotSelected = selectedRoles.indexOf(role.value) === -1;
-                    var isChecked = checkedRoles.indexOf(role.value) !== -1;
-                    var isNotAssigned = assignedRoleValues.indexOf(role.value) === -1;
-                    return isNotSelected && isChecked && isNotAssigned;
-                });
-                
-                return filtered;
-            }
-            
-            // Show role dropdown
-            function showRoleDropdown(roles) {
-                var html = '';
-                if (roles.length === 0) {
-                    html = '<div style="padding: 8px 12px; color: #666; font-style: italic;">No available roles to assign</div>';
-                } else {
-                    roles.forEach(function(role) {
-                        html += '<div class="rbts-role-option" data-value="' + role.value + '" style="padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee;">' + role.label + '</div>';
-                    });
-                }
-                
-                // Position dropdown at the bottom of the container
-                var $container = $('#rbts-selected-roles-container');
-                
-                $('#rbts-available-roles')
-                    .html(html)
-                    .css({
-                        'top': $container.innerHeight() - 10 + 'px'
-                    })
-                    .show();
-            }
-            
-            // Update role tags display
-            function updateRoleTags() {
-                var html = '';
-                selectedRoles.forEach(function(roleValue) {
-                    var role = availableRoles.find(function(r) { return r.value === roleValue; });
-                    if (role) {
-                        html += '<span class="rbts-role-tag" style="display: inline-block; background: #0073aa; color: white; padding: 4px 8px; margin: 2px; border-radius: 3px; font-size: 12px;">' +
-                                role.label + 
-                                '<span class="rbts-role-tag-remove" data-value="' + roleValue + '" style="margin-left: 5px; cursor: pointer; font-weight: bold;">×</span>' +
-                                '</span>';
-                    }
-                });
-                $('#rbts-selected-roles-tags').html(html);
-                
-                // Show/hide save button based on selected roles
-                if (selectedRoles.length > 0) {
-                    $('#rbts-save-assignment').show();
-                } else {
-                    $('#rbts-save-assignment').hide();
-                }
-            }
-            
-            // Handle Save Assignment button
-            $('#rbts-save-assignment').click(function() {
-                if (selectedRoles.length === 0) {
-                    // Show notification for no roles selected
-                    var notification = '<div id="rbts-no-roles-notice" style="margin-top: 10px; padding: 10px; border-left: 4px solid #dc3232; background: #fbeaea; color: #a00;">' +
-                                     '<p><strong>Error:</strong> Please select at least one role before saving the assignment.</p>' +
-                                     '</div>';
-                    
-                    // Remove existing notice if any
-                    $('#rbts-no-roles-notice').remove();
-                    
-                    // Add notice after the save button
-                    $(this).after(notification);
-                    
-                    // Auto-hide after 5 seconds
-                    setTimeout(function() {
-                        $('#rbts-no-roles-notice').fadeOut();
-                    }, 5000);
-                    
-                    return;
-                }
-                
-                // Remove any existing error notices
-                $('#rbts-no-roles-notice').remove();
-                
-                // Get current redirect settings
-                var redirectType = $('input[name="<?php echo esc_js($this->option_name); ?>[redirect_type]"]:checked').val();
-                var customPath = $('input[name="<?php echo esc_js($this->option_name); ?>[custom_path]"]').val();
-                var fullUrl = $('input[name="<?php echo esc_js($this->option_name); ?>[full_url]"]').val();
-                
-                // Create assignment object
-                var assignment = {
-                    roles: selectedRoles.slice(), // Copy array
-                    redirect_type: redirectType,
-                    custom_path: customPath,
-                    full_url: fullUrl
-                };
-                
-                // Create a proper form data structure
-                var formData = new FormData();
-                formData.append('action', 'options.php');
-                formData.append('option_page', 'rbts_admin_bar_control_group');
-                formData.append('_wpnonce', $('input[name="_wpnonce"]').val());
-                formData.append('_wp_http_referer', $('input[name="_wp_http_referer"]').val());
-                
-                // Add existing form data
-                $('form input, form select').each(function() {
-                    var $input = $(this);
-                    var name = $input.attr('name');
-                    var value = $input.val();
-                    
-                    if (name && name !== '_wpnonce' && name !== '_wp_http_referer') {
-                        if ($input.attr('type') === 'checkbox' || $input.attr('type') === 'radio') {
-                            if ($input.is(':checked')) {
-                                formData.append(name, value);
-                            }
-                        } else {
-                            formData.append(name, value);
-                        }
-                    }
-                });
-                
-                // Add the new assignment
-                formData.append('<?php echo esc_js($this->option_name); ?>[role_assignments][]', encodeURIComponent(JSON.stringify(assignment)));
-                
-                // Submit via AJAX to avoid page reload issues
-                $.ajax({
-                    url: 'options.php',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        // Show success message
-                        var successNotice = '<div id="rbts-success-notice" style="margin-top: 10px; padding: 10px; border-left: 4px solid #00a32a; background: #f0f6fc; color: #00a32a;">' +
-                                          '<p><strong>Success:</strong> Role assignment saved successfully! The page will reload to show your changes.</p>' +
-                                          '</div>';
-                        
-                        $('#rbts-save-assignment').after(successNotice);
-                        
-                        // Reload page after short delay to show updated assignments
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 2000);
-                    },
-                    error: function() {
-                        // Show error message
-                        var errorNotice = '<div id="rbts-error-notice" style="margin-top: 10px; padding: 10px; border-left: 4px solid #dc3232; background: #fbeaea; color: #a00;">' +
-                                        '<p><strong>Error:</strong> Failed to save assignment. Please try again.</p>' +
-                                        '</div>';
-                        
-                        $('#rbts-save-assignment').after(errorNotice);
-                        
-                        setTimeout(function() {
-                            $('#rbts-error-notice').fadeOut();
-                        }, 5000);
-                    }
-                });
-            });
-            
-            // Handle Remove Assignment button
-            $(document).on('click', '.rbts-remove-assignment', function() {
-                var index = $(this).data('index');
-                var $assignmentDiv = $(this).closest('.rbts-saved-assignment');
-                
-                // Create custom confirmation dialog
-                var confirmDialog = '<div id="rbts-confirm-dialog" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center;">' +
-                                  '<div style="background: white; padding: 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; width: 90%;">' +
-                                  '<h3 style="margin-top: 0; color: #23282d;">Confirm Removal</h3>' +
-                                  '<p>Are you sure you want to remove this role assignment configuration?</p>' +
-                                  '<div style="text-align: right; margin-top: 20px;">' +
-                                  '<button type="button" id="rbts-confirm-cancel" class="button" style="margin-right: 10px;">Cancel</button>' +
-                                  '<button type="button" id="rbts-confirm-remove" class="button" style="background: #d63638; color: white; border-color: #d63638;">Remove</button>' +
-                                  '</div>' +
-                                  '</div>' +
-                                  '</div>';
-                
-                $('body').append(confirmDialog);
-                
-                // Handle cancel
-                $('#rbts-confirm-cancel, #rbts-confirm-dialog').click(function(e) {
-                    if (e.target === this) {
-                        $('#rbts-confirm-dialog').remove();
-                    }
-                });
-                
-                // Handle confirm remove
-                $('#rbts-confirm-remove').click(function() {
-                    $('#rbts-confirm-dialog').remove();
-                    
-                    // Show loading state
-                    $assignmentDiv.css('opacity', '0.5');
-                    
-                    // Create form data for removal
-                    var formData = new FormData();
-                    formData.append('action', 'options.php');
-                    formData.append('option_page', 'rbts_admin_bar_control_group');
-                    formData.append('_wpnonce', $('input[name="_wpnonce"]').val());
-                    formData.append('_wp_http_referer', $('input[name="_wp_http_referer"]').val());
-                    formData.append('remove_assignment', index);
-                    
-                    // Add existing form data
-                    $('form input, form select').each(function() {
-                        var $input = $(this);
-                        var name = $input.attr('name');
-                        var value = $input.val();
-                        
-                        if (name && name !== '_wpnonce' && name !== '_wp_http_referer') {
-                            if ($input.attr('type') === 'checkbox' || $input.attr('type') === 'radio') {
-                                if ($input.is(':checked')) {
-                                    formData.append(name, value);
-                                }
-                            } else {
-                                formData.append(name, value);
-                            }
-                        }
-                    });
-                    
-                    // Submit removal via AJAX
-                    $.ajax({
-                        url: 'options.php',
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function(response) {
-                            // Show success message
-                            var successNotice = '<div id="rbts-remove-success" style="margin: 10px 0; padding: 10px; border-left: 4px solid #00a32a; background: #f0f6fc; color: #00a32a;">' +
-                                              '<p><strong>Success:</strong> Role assignment removed successfully! The page will reload to show your changes.</p>' +
-                                              '</div>';
-                            
-                            $assignmentDiv.before(successNotice);
-                            
-                            // Reload page after short delay
-                            setTimeout(function() {
-                                window.location.reload();
-                            }, 1500);
-                        },
-                        error: function() {
-                            // Show error message and restore opacity
-                            $assignmentDiv.css('opacity', '1');
-                            var errorNotice = '<div id="rbts-remove-error" style="margin: 10px 0; padding: 10px; border-left: 4px solid #dc3232; background: #fbeaea; color: #a00;">' +
-                                            '<p><strong>Error:</strong> Failed to remove assignment. Please try again.</p>' +
-                                            '</div>';
-                            
-                            $assignmentDiv.before(errorNotice);
-                            
-                            setTimeout(function() {
-                                $('#rbts-remove-error').fadeOut();
-                            }, 5000);
-                        }
-                    });
-                });
-            });
-            
-            // Refresh available roles when assignments change
-            function refreshAvailableRoles() {
-                // This function can be called after assignments are added/removed
-                // to update the dropdown options
-                if ($('#rbts-available-roles').is(':visible')) {
-                    var availableForSelection = getAvailableRoles();
-                    showRoleDropdown(availableForSelection);
-                }
-            }
-        });
-        </script>
+
         <?php
     }
     
@@ -934,12 +526,79 @@ class RBTS_AdminBarControl {
         
         // Check if user has any restricted role
         if (array_intersect($user_roles, $restricted_roles)) {
-            $redirect_url = $this->get_redirect_url();
+            // First check for advanced role-based redirects
+            $redirect_url = $this->get_role_specific_redirect_url($user_roles);
+            
+            // If no specific redirect found, use general settings
+            if (!$redirect_url) {
+                $redirect_url = $this->get_redirect_url();
+            }
+            
             wp_redirect($redirect_url);
             exit;
         }
     }
     
+    /**
+     * Get role-specific redirect URL from advanced assignments
+     */
+    private function get_role_specific_redirect_url($user_roles) {
+        $role_assignments = isset($this->options['role_assignments']) ? $this->options['role_assignments'] : array();
+        
+        if (empty($role_assignments)) {
+            return false;
+        }
+        
+        // Check each assignment to see if user's roles match
+        foreach ($role_assignments as $assignment) {
+            if (isset($assignment['roles']) && is_array($assignment['roles'])) {
+                // Check if user has any of the roles in this assignment
+                if (array_intersect($user_roles, $assignment['roles'])) {
+                    // Found a matching assignment, get the redirect URL
+                    return $this->get_assignment_redirect_url($assignment);
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Get redirect URL from a specific role assignment
+     */
+    private function get_assignment_redirect_url($assignment) {
+        $redirect_type = isset($assignment['redirect_type']) ? $assignment['redirect_type'] : 'home';
+        
+        switch ($redirect_type) {
+            case 'custom_path':
+                $custom_path = isset($assignment['custom_path']) ? trim($assignment['custom_path']) : '';
+                if (!empty($custom_path)) {
+                    $validated_path = $this->validate_custom_path($custom_path);
+                    if (!empty($validated_path)) {
+                        $redirect_url = home_url('/' . ltrim($validated_path, '/'));
+                        if (!preg_match('/\.[a-zA-Z0-9]+$/', $validated_path)) {
+                            $redirect_url = rtrim($redirect_url, '/') . '/';
+                        }
+                        return $redirect_url;
+                    }
+                }
+                break;
+                
+            case 'full_url':
+                $full_url = isset($assignment['full_url']) ? trim($assignment['full_url']) : '';
+                if (!empty($full_url)) {
+                    $validated_url = $this->validate_full_url($full_url);
+                    if (!empty($validated_url)) {
+                        return $validated_url;
+                    }
+                }
+                break;
+        }
+        
+        // Default to home if validation fails
+        return home_url('/');
+    }
+
     /**
      * Get redirect URL based on settings with enhanced validation
      */
@@ -953,7 +612,13 @@ class RBTS_AdminBarControl {
                     // Re-validate the path at runtime for extra security
                     $validated_path = $this->validate_custom_path($custom_path);
                     if (!empty($validated_path)) {
-                        return home_url('/' . ltrim($validated_path, '/') . '/');
+                        // Ensure proper URL construction without double slashes
+                        $redirect_url = home_url('/' . ltrim($validated_path, '/'));
+                        // Add trailing slash only if the path doesn't end with a file extension
+                        if (!preg_match('/\.[a-zA-Z0-9]+$/', $validated_path)) {
+                            $redirect_url = rtrim($redirect_url, '/') . '/';
+                        }
+                        return $redirect_url;
                     }
                 }
                 break;
@@ -976,4 +641,4 @@ class RBTS_AdminBarControl {
 }
 
 // Initialize the plugin with unique class name
-new RBTS_AdminBarControl();
+new R22_AdminBarControl();
