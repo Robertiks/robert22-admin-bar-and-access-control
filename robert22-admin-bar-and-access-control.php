@@ -17,15 +17,15 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants with unique prefix
-define('R22_ABC_PLUGIN_URL', plugin_dir_url(__FILE__));
-define('R22_ABC_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('R22_ABC_VERSION', '1.0.0');
-define('R22_ABC_OPTION_NAME', 'r22_admin_bar_control_options');
+define('ROBERT22ABC_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('ROBERT22ABC_PLUGIN_PATH', plugin_dir_path(__FILE__));
+define('ROBERT22ABC_VERSION', '1.0.0');
+define('ROBERT22ABC_OPTION_NAME', 'robert22abc_admin_bar_control_options');
 
-class R22_AdminBarControl {
+class Robert22ABC_AdminBarControl {
     
     private $options;
-    private $option_name = 'r22_admin_bar_control_options';
+    private $option_name = 'robert22abc_admin_bar_control_options';
     
     public function __construct() {
         add_action('init', array($this, 'init'));
@@ -56,7 +56,7 @@ class R22_AdminBarControl {
             'Robert22 Admin Bar and Access Control',
             'Admin Bar Control',
             'manage_options',
-            'r22-admin-bar-and-access-control',
+            'robert22abc-admin-bar-and-access-control',
             array($this, 'admin_page')
         );
     }
@@ -65,7 +65,7 @@ class R22_AdminBarControl {
      * Initialize admin settings
      */
     public function admin_init() {
-        register_setting('r22_admin_bar_control_group', $this->option_name, array(
+        register_setting('robert22abc_admin_bar_control_group', $this->option_name, array(
             'sanitize_callback' => array($this, 'sanitize_options')
         ));
         
@@ -86,7 +86,7 @@ class R22_AdminBarControl {
         $role_assignments = isset($current_options['role_assignments']) ? $current_options['role_assignments'] : array();
         
         // Handle removal of assignments
-        if (isset($_POST['remove_assignment']) && isset($_POST['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'r22_admin_bar_control_group-options')) {
+        if (isset($_POST['remove_assignment']) && isset($_POST['_wpnonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['_wpnonce'])), 'robert22abc_admin_bar_control_group-options')) {
             $remove_index = intval($_POST['remove_assignment']);
             if (isset($role_assignments[$remove_index])) {
                 unset($role_assignments[$remove_index]);
@@ -174,18 +174,18 @@ class R22_AdminBarControl {
      * Enqueue admin styles and scripts
      */
     public function enqueue_admin_styles($hook) {
-        if ($hook !== 'tools_page_r22-admin-bar-and-access-control') {
+        if ($hook !== 'tools_page_robert22abc-admin-bar-and-access-control') {
             return;
         }
-        wp_enqueue_style('r22-admin-bar-and-access-control-admin', R22_ABC_PLUGIN_URL . 'assets/admin-style.css', array(), R22_ABC_VERSION);
+        wp_enqueue_style('robert22abc-admin-bar-and-access-control-admin', ROBERT22ABC_PLUGIN_URL . 'assets/admin-style.css', array(), ROBERT22ABC_VERSION);
         wp_enqueue_script('jquery');
-        wp_enqueue_script('r22-admin-bar-and-access-control-admin', R22_ABC_PLUGIN_URL . 'assets/admin-main-js.js', array('jquery'), R22_ABC_VERSION, true);
+        wp_enqueue_script('robert22abc-admin-bar-and-access-control-admin', ROBERT22ABC_PLUGIN_URL . 'assets/admin-main-js.js', array('jquery'), ROBERT22ABC_VERSION, true);
         
         // Localize script with PHP variables
-        wp_localize_script('r22-admin-bar-and-access-control-admin', 'r22AdminVars', array(
+        wp_localize_script('robert22abc-admin-bar-and-access-control-admin', 'robert22abcAdminVars', array(
             'optionName' => $this->option_name,
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('r22_admin_nonce')
+            'nonce' => wp_create_nonce('robert22abc_admin_nonce')
         ));
     }
     
@@ -216,8 +216,8 @@ class R22_AdminBarControl {
             </div>
             
             <form method="post" action="options.php">
-                <?php settings_fields('r22_admin_bar_control_group'); ?>
-                <?php do_settings_sections('r22_admin_bar_control_group'); ?>
+                <?php settings_fields('robert22abc_admin_bar_control_group'); ?>
+                <?php do_settings_sections('robert22abc_admin_bar_control_group'); ?>
                 
                 <div class="rbts-admin-bar-and-roles-control-section">
                     <h2>General Settings</h2>
@@ -484,11 +484,12 @@ class R22_AdminBarControl {
      * Add CSS to completely hide admin bar
      */
     public function hide_admin_bar_css() {
-        echo '<style type="text/css">
+        $css = '
             #wpadminbar { display: none !important; }
             html { margin-top: 0 !important; }
             * html body { margin-top: 0 !important; }
-        </style>';
+        ';
+        wp_add_inline_style('wp-admin', $css);
     }
     
     /**
@@ -641,4 +642,4 @@ class R22_AdminBarControl {
 }
 
 // Initialize the plugin with unique class name
-new R22_AdminBarControl();
+new Robert22ABC_AdminBarControl();

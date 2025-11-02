@@ -1,7 +1,7 @@
 
 jQuery(document).ready(function($) {
     // Show/hide redirect options based on selection
-    $('input[name="' + r22AdminVars.optionName + '[redirect_type]"]').change(function() {
+    $('input[name="' + robert22abcAdminVars.optionName + '[redirect_type]"]').change(function() {
         $('.rbts-custom-path-input, .rbts-full-url-input').hide();
         if ($(this).val() === 'custom_path') {
             $('.rbts-custom-path-input').show();
@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
     });
     
     // Initialize visibility based on current selection without triggering change
-    var currentSelection = $('input[name="' + r22AdminVars.optionName + '[redirect_type]"]:checked').val();
+    var currentSelection = $('input[name="' + robert22abcAdminVars.optionName + '[redirect_type]"]:checked').val();
     if (currentSelection === 'custom_path') {
         $('.rbts-custom-path-input').show();
         $('.rbts-full-url-input').hide();
@@ -27,7 +27,7 @@ jQuery(document).ready(function($) {
     var availableRoles = [];
     
     // Get all available roles (excluding administrator)
-    $('input[name="' + r22AdminVars.optionName + '[restricted_roles][]"]').each(function() {
+    $('input[name="' + robert22abcAdminVars.optionName + '[restricted_roles][]"]').each(function() {
         var roleValue = $(this).val();
         var roleLabel = $(this).parent().text().trim();
                 availableRoles.push({
@@ -39,7 +39,7 @@ jQuery(document).ready(function($) {
             // Handle Assign Selected Roles button click
             $('#rbts-assign-roles-btn').click(function() {
                 var $button = $(this);
-                var checkedRoles = $('input[name="' + r22AdminVars.optionName + '[restricted_roles][]"]:checked');
+                var checkedRoles = $('input[name="' + robert22abcAdminVars.optionName + '[restricted_roles][]"]:checked');
                 
                 if ($button.text().trim() === 'Go Back') {
                     // Close and reset the role assignment form
@@ -150,7 +150,7 @@ jQuery(document).ready(function($) {
             // Get available roles for selection
             function getAvailableRoles() {
                 var checkedRoles = [];
-                $('input[name="' + r22AdminVars.optionName + '[restricted_roles][]"]:checked').each(function() {
+                $('input[name="' + robert22abcAdminVars.optionName + '[restricted_roles][]"]:checked').each(function() {
                     checkedRoles.push($(this).val());
                 });
                 
@@ -248,9 +248,9 @@ jQuery(document).ready(function($) {
                 $('#rbts-no-roles-notice').remove();
                 
                 // Get current redirect settings
-                var redirectType = $('input[name="' + r22AdminVars.optionName + '[redirect_type]"]:checked').val();
-                var customPath = $('input[name="' + r22AdminVars.optionName + '[custom_path]"]').val();
-                var fullUrl = $('input[name="' + r22AdminVars.optionName + '[full_url]"]').val();
+                var redirectType = $('input[name="' + robert22abcAdminVars.optionName + '[redirect_type]"]:checked').val();
+                var customPath = $('input[name="' + robert22abcAdminVars.optionName + '[custom_path]"]').val();
+                var fullUrl = $('input[name="' + robert22abcAdminVars.optionName + '[full_url]"]').val();
                 
                 // Create assignment object
                 var assignment = {
@@ -263,7 +263,7 @@ jQuery(document).ready(function($) {
                 // Create a proper form data structure
                 var formData = new FormData();
                 formData.append('action', 'options.php');
-                formData.append('option_page', 'r22_admin_bar_control_group');
+                formData.append('option_page', 'robert22abc_admin_bar_control_group');
                 formData.append('_wpnonce', $('input[name="_wpnonce"]').val());
                 formData.append('_wp_http_referer', $('input[name="_wp_http_referer"]').val());
                 
@@ -285,7 +285,7 @@ jQuery(document).ready(function($) {
                 });
                 
                 // Add the new assignment
-                formData.append(r22AdminVars.optionName + '[role_assignments][]', encodeURIComponent(JSON.stringify(assignment)));
+                formData.append(robert22abcAdminVars.optionName + '[role_assignments][]', encodeURIComponent(JSON.stringify(assignment)));
                 
                 // Submit via AJAX to avoid page reload issues
                 $.ajax({
@@ -358,7 +358,7 @@ jQuery(document).ready(function($) {
                     // Create form data for removal
                     var formData = new FormData();
                     formData.append('action', 'options.php');
-                    formData.append('option_page', 'r22_admin_bar_control_group');
+                    formData.append('option_page', 'robert22abc_admin_bar_control_group');
                     formData.append('_wpnonce', $('input[name="_wpnonce"]').val());
                     formData.append('_wp_http_referer', $('input[name="_wp_http_referer"]').val());
                     formData.append('remove_assignment', index);

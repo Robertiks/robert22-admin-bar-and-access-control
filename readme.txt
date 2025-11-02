@@ -1,5 +1,5 @@
 === Robert22 Admin Bar and Access Control ===
-Contributors: Robertiks
+Contributors: robert22
 Tags: admin bar, user roles, access control, redirect, role-based redirects
 Requires at least: 5.0
 Tested up to: 6.8
